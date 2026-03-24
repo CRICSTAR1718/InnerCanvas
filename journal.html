@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Journal</title>
+    <link rel="stylesheet" href="journalstyles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-nav">
+                <button class="back-home-btn" onclick="window.location.href='home.html'">
+                    <span class="btn-icon">🏠</span>
+                    Back to Home
+                </button>
+            </div>
+            <h1>📖 Life Journal</h1>
+            <p>Capture your thoughts, memories, and experiences</p>
+        </header>
+        
+        <div class="journal-controls">
+            <button id="newEntryBtn" class="new-entry-btn">
+                <span class="btn-icon">✍️</span>
+                New Entry
+            </button>
+            <div class="search-section">
+                <input type="text" id="searchInput" placeholder="Search entries..." maxlength="50">
+                <button id="searchBtn" class="search-btn">🔍</button>
+            </div>
+        </div>
+        
+        <div class="journal-stats">
+            <div class="stat-item">
+                <span class="stat-number" id="totalEntries">0</span>
+                <span class="stat-label">Total Entries</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="thisMonth">0</span>
+                <span class="stat-label">This Month</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="thisWeek">0</span>
+                <span class="stat-label">This Week</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number" id="totalWords">0</span>
+                <span class="stat-label">Total Words</span>
+            </div>
+        </div>
+        
+        <div class="filter-section">
+            <button class="filter-btn active" data-filter="all">All Entries</button>
+            <button class="filter-btn" data-filter="today">Today</button>
+            <button class="filter-btn" data-filter="week">This Week</button>
+            <button class="filter-btn" data-filter="month">This Month</button>
+            <button class="filter-btn" data-filter="favorites">Favorites</button>
+        </div>
+        
+        <div class="journal-entries">
+            <div id="entriesList" class="entries-list">
+                <!-- Journal entries will be dynamically added here -->
+            </div>
+            
+            <div id="emptyState" class="empty-state">
+                <div class="empty-icon">📝</div>
+                <h3>No journal entries yet</h3>
+                <p>Start your journaling journey by creating your first entry!</p>
+                <button class="start-journal-btn" onclick="window.location.href='journaleditor.html'">
+                    <span class="btn-icon">✍️</span>
+                    Start Writing
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Entry Preview Modal -->
+    <div id="previewModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalContent">
+                <!-- Modal content will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content small">
+            <h3>Delete Entry</h3>
+            <p>Are you sure you want to delete this journal entry? This action cannot be undone.</p>
+            <div class="modal-actions">
+                <button id="confirmDelete" class="btn-danger">Delete</button>
+                <button id="cancelDelete" class="btn-secondary">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="journalscript.js"></script>
+</body>
+</html>

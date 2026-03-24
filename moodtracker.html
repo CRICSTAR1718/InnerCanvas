@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Tracker</title>
+    <link rel="stylesheet" href="moodtrackerstyles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-nav">
+                <button class="back-home-btn" onclick="window.location.href='home.html'">
+                    <span class="btn-icon">🏠</span>
+                    Back to Home
+                </button>
+            </div>
+            <h1>😊 Mood Tracker</h1>
+            <p>Track your daily emotions and feelings</p>
+        </header>
+        
+        <!-- Navigation Tabs -->
+        <div class="nav-tabs">
+            <button class="tab-btn active" data-tab="add-mood">Add Mood</button>
+            <button class="tab-btn" data-tab="mood-list">Mood History</button>
+            <button class="tab-btn" data-tab="calendar">Calendar</button>
+        </div>
+        
+        <!-- Add Mood Tab -->
+        <div id="add-mood" class="tab-content active">
+            <div class="mood-form">
+                <h2>How are you feeling today?</h2>
+                
+                <div class="emoji-selector">
+                    <h3>Choose your mood:</h3>
+                    <div class="emoji-grid">
+                        <button class="emoji-btn" data-emoji="😊" data-mood="Happy">
+                            <span class="emoji">😊</span>
+                            <span class="mood-label">Happy</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😢" data-mood="Sad">
+                            <span class="emoji">😢</span>
+                            <span class="mood-label">Sad</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😴" data-mood="Tired">
+                            <span class="emoji">😴</span>
+                            <span class="mood-label">Tired</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😤" data-mood="Angry">
+                            <span class="emoji">😤</span>
+                            <span class="mood-label">Angry</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😰" data-mood="Anxious">
+                            <span class="emoji">😰</span>
+                            <span class="mood-label">Anxious</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😌" data-mood="Calm">
+                            <span class="emoji">😌</span>
+                            <span class="mood-label">Calm</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="🤔" data-mood="Thoughtful">
+                            <span class="emoji">🤔</span>
+                            <span class="mood-label">Thoughtful</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😍" data-mood="Excited">
+                            <span class="emoji">😍</span>
+                            <span class="mood-label">Excited</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😔" data-mood="Disappointed">
+                            <span class="emoji">😔</span>
+                            <span class="mood-label">Disappointed</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😎" data-mood="Confident">
+                            <span class="emoji">😎</span>
+                            <span class="mood-label">Confident</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="🤗" data-mood="Grateful">
+                            <span class="emoji">🤗</span>
+                            <span class="mood-label">Grateful</span>
+                        </button>
+                        <button class="emoji-btn" data-emoji="😕" data-mood="Confused">
+                            <span class="emoji">😕</span>
+                            <span class="mood-label">Confused</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="moodTitle">Title (optional):</label>
+                    <input type="text" id="moodTitle" placeholder="e.g., 'Great day at work'" maxlength="50">
+                </div>
+                
+                <div class="form-group">
+                    <label for="moodNote">Note (optional):</label>
+                    <textarea id="moodNote" placeholder="How are you feeling? What's on your mind?" maxlength="200" rows="3"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="moodDate">Date:</label>
+                    <input type="date" id="moodDate">
+                </div>
+                
+                <button id="saveMoodBtn" class="save-btn" disabled>
+                    <span class="btn-icon">💾</span>
+                    Save Mood
+                </button>
+            </div>
+        </div>
+        
+        <!-- Mood History Tab -->
+        <div id="mood-list" class="tab-content">
+            <div class="mood-history">
+                <div class="history-header">
+                    <h2>Your Mood History</h2>
+                    <div class="filter-controls">
+                        <select id="moodFilter">
+                            <option value="all">All Moods</option>
+                            <option value="😊">Happy</option>
+                            <option value="😢">Sad</option>
+                            <option value="😴">Tired</option>
+                            <option value="😤">Angry</option>
+                            <option value="😰">Anxious</option>
+                            <option value="😌">Calm</option>
+                            <option value="🤔">Thoughtful</option>
+                            <option value="😍">Excited</option>
+                            <option value="😔">Disappointed</option>
+                            <option value="😎">Confident</option>
+                            <option value="🤗">Grateful</option>
+                            <option value="😕">Confused</option>
+                        </select>
+                        <button id="clearHistoryBtn" class="clear-btn">Clear All</button>
+                    </div>
+                </div>
+                
+                <div id="moodStats" class="mood-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="totalMoods">0</span>
+                        <span class="stat-label">Total Entries</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="currentStreak">0</span>
+                        <span class="stat-label">Day Streak</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="mostCommonMood">-</span>
+                        <span class="stat-label">Most Common</span>
+                    </div>
+                </div>
+                
+                <div id="moodList" class="mood-list">
+                    <!-- Mood entries will be dynamically added here -->
+                </div>
+                
+                <div id="emptyHistory" class="empty-state">
+                    <div class="empty-icon">📝</div>
+                    <h3>No moods recorded yet</h3>
+                    <p>Start tracking your emotions to see your mood history here!</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Calendar Tab -->
+        <div id="calendar" class="tab-content">
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prevMonth" class="nav-btn">‹</button>
+                    <h2 id="currentMonth"></h2>
+                    <button id="nextMonth" class="nav-btn">›</button>
+                </div>
+                
+                <div class="calendar-grid">
+                    <div class="calendar-weekdays">
+                        <div class="weekday">Sun</div>
+                        <div class="weekday">Mon</div>
+                        <div class="weekday">Tue</div>
+                        <div class="weekday">Wed</div>
+                        <div class="weekday">Thu</div>
+                        <div class="weekday">Fri</div>
+                        <div class="weekday">Sat</div>
+                    </div>
+                    <div id="calendarDays" class="calendar-days">
+                        <!-- Calendar days will be dynamically generated here -->
+                    </div>
+                </div>
+                
+                <div class="calendar-legend">
+                    <h3>Mood Legend</h3>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span class="legend-emoji">😊</span>
+                            <span class="legend-label">Happy</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-emoji">😢</span>
+                            <span class="legend-label">Sad</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-emoji">😴</span>
+                            <span class="legend-label">Tired</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-emoji">😤</span>
+                            <span class="legend-label">Angry</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-emoji">😰</span>
+                            <span class="legend-label">Anxious</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-emoji">😌</span>
+                            <span class="legend-label">Calm</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mood Detail Modal -->
+    <div id="moodModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div id="modalContent">
+                <!-- Modal content will be dynamically added here -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="moodtrackerscript.js"></script>
+</body>
+</html>

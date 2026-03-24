@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InnerCanvas - Personal Productivity Hub</title>
+    <link rel="stylesheet" href="homestyles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="main-header">
+            <div class="header-content">
+                <h1 class="main-title">
+                    <span class="title-icon">🎨</span>
+                    InnerCanvas
+                </h1>
+                <p class="main-subtitle">Your Personal Productivity & Wellness Hub</p>
+                <p class="welcome-text">Organize your life, track your mood, and capture your thoughts in one beautiful place.</p>
+            </div>
+        </header>
+        
+        <div class="apps-grid">
+            <div class="app-card" data-app="task-manager">
+                <div class="app-icon">📝</div>
+                <h2 class="app-title">Task Manager</h2>
+                <p class="app-description">Stay organized with your daily tasks. Create, complete, and manage your to-do list with ease.</p>
+                <div class="app-features">
+                    <span class="feature-tag">Add Tasks</span>
+                    <span class="feature-tag">Mark Complete</span>
+                    <span class="feature-tag">Filter & Search</span>
+                    <span class="feature-tag">Local Storage</span>
+                </div>
+                <button class="app-btn" onclick="navigateToApp('taskmanger.html')">
+                    <span class="btn-text">Step Into Your Workflow</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+            
+            <div class="app-card" data-app="mood-tracker">
+                <div class="app-icon">😊</div>
+                <h2 class="app-title">Mood Tracker</h2>
+                <p class="app-description">Track your daily emotions and feelings. Record your mood with emojis, notes, and view patterns over time.</p>
+                <div class="app-features">
+                    <span class="feature-tag">Emoji Moods</span>
+                    <span class="feature-tag">Calendar View</span>
+                    <span class="feature-tag">Statistics</span>
+                    <span class="feature-tag">History</span>
+                </div>
+                <button class="app-btn" onclick="navigateToApp('moodtracker.html')">
+                    <span class="btn-text">Track. Understand. Balance.</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+            
+            <div class="app-card" data-app="journal">
+                <div class="app-icon">📖</div>
+                <h2 class="app-title">Life Journal</h2>
+                <p class="app-description">Capture your thoughts, memories, and experiences. Write with rich formatting, add images, and choose beautiful themes.</p>
+                <div class="app-features">
+                    <span class="feature-tag">Rich Text Editor</span>
+                    <span class="feature-tag">Image Support</span>
+                    <span class="feature-tag">Themes</span>
+                    <span class="feature-tag">Auto-save</span>
+                </div>
+                <button class="app-btn" onclick="navigateToApp('journal.html')">
+                    <span class="btn-text">Capture Your Thoughts</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="stats-section">
+            <h3 class="stats-title">Your Progress Overview</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="totalTasks">0</span>
+                        <span class="stat-label">Tasks Completed</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">😊</div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="totalMoods">0</span>
+                        <span class="stat-label">Moods Recorded</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📝</div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="totalEntries">0</span>
+                        <span class="stat-label">Journal Entries</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">📈</div>
+                    <div class="stat-content">
+                        <span class="stat-number" id="streakDays">0</span>
+                        <span class="stat-label">Day Streak</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="quick-actions">
+            <h3 class="actions-title">Quick Actions</h3>
+            <div class="actions-grid">
+                <button class="quick-action-btn" onclick="navigateToApp('taskmanger.html')">
+                    <span class="action-icon">➕</span>
+                    <span class="action-text">Add New Task</span>
+                </button>
+                <button class="quick-action-btn" onclick="navigateToApp('moodtracker.html')">
+                    <span class="action-icon">😊</span>
+                    <span class="action-text">Log Today's Mood</span>
+                </button>
+                <button class="quick-action-btn" onclick="navigateToApp('journal.html')">
+                    <span class="action-icon">✍️</span>
+                    <span class="action-text">Write Journal Entry</span>
+                </button>
+                <button class="quick-action-btn" onclick="showTips()">
+                    <span class="action-icon">💡</span>
+                    <span class="action-text">View Tips</span>
+                </button>
+            </div>
+        </div>
+        
+        <div class="recent-activity">
+            <h3 class="activity-title">Recent Activity</h3>
+            <div id="recentActivity" class="activity-list">
+                <div class="activity-item">
+                    <span class="activity-icon">🎉</span>
+                    <span class="activity-text">Welcome to InnerCanvas! Start by exploring your productivity tools.</span>
+                    <span class="activity-time">Just now</span>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="main-footer">
+            <div class="footer-content">
+                <p class="footer-text">Built with ❤️ for personal productivity and wellness</p>
+                <div class="footer-links">
+                    <button class="footer-link" onclick="showAbout()">About</button>
+                    <button class="footer-link" onclick="showSettings()">Settings</button>
+                    <button class="footer-link" onclick="exportData()">Export Data</button>
+                </div>
+            </div>
+        </footer>
+    </div>
+    
+    <!-- Tips Modal -->
+    <div id="tipsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>💡 Productivity Tips</h3>
+            <div class="tips-content">
+                <div class="tip-section">
+                    <h4>📝 Task Management</h4>
+                    <ul>
+                        <li>Break large tasks into smaller, manageable pieces</li>
+                        <li>Use the priority system to focus on what matters most</li>
+                        <li>Review and update your tasks daily</li>
+                        <li>Celebrate completing tasks to stay motivated</li>
+                    </ul>
+                </div>
+                <div class="tip-section">
+                    <h4>😊 Mood Tracking</h4>
+                    <ul>
+                        <li>Log your mood at the same time each day for consistency</li>
+                        <li>Add notes to understand what influences your mood</li>
+                        <li>Review your mood patterns weekly to identify trends</li>
+                        <li>Use the calendar view to see your emotional journey</li>
+                    </ul>
+                </div>
+                <div class="tip-section">
+                    <h4>📖 Journaling</h4>
+                    <ul>
+                        <li>Write regularly, even if just a few sentences</li>
+                        <li>Use different themes to match your mood</li>
+                        <li>Include details about your day and feelings</li>
+                        <li>Don't worry about perfect grammar - focus on expression</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- About Modal -->
+    <div id="aboutModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>About InnerCanvas</h3>
+            <div class="about-content">
+                <p>InnerCanvas is your personal productivity and wellness hub, designed to help you organize your life, track your emotions, and capture your thoughts.</p>
+                <h4>Features:</h4>
+                <ul>
+                    <li><strong>Task Manager:</strong> Organize and track your daily tasks</li>
+                    <li><strong>Mood Tracker:</strong> Monitor your emotional well-being</li>
+                    <li><strong>Life Journal:</strong> Document your thoughts and experiences</li>
+                </ul>
+                <p>All your data is stored locally in your browser for privacy and security.</p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Settings</h3>
+            <div class="settings-content">
+                <div class="setting-group">
+                    <label for="themeSelect">Theme:</label>
+                    <select id="themeSelect">
+                        <option value="default">Default</option>
+                        <option value="dark">Dark Mode</option>
+                        <option value="light">Light Mode</option>
+                    </select>
+                </div>
+                <div class="setting-group">
+                    <label for="autoSave">Auto-save:</label>
+                    <input type="checkbox" id="autoSave" checked>
+                </div>
+                <div class="setting-group">
+                    <label for="notifications">Notifications:</label>
+                    <input type="checkbox" id="notifications" checked>
+                </div>
+                <button class="save-settings-btn" onclick="saveSettings()">Save Settings</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="homescript.js"></script>
+</body>
+</html>

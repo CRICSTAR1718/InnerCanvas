@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal Editor</title>
+    <link rel="stylesheet" href="journalstyles.css">
+</head>
+<body>
+    <div class="editor-container">
+        <header class="editor-header">
+            <div class="editor-nav">
+                <button id="backBtn" class="back-btn">
+                    <span class="btn-icon">←</span>
+                    Back to Journal
+                </button>
+                <div class="editor-title">
+                    <input type="text" id="entryTitle" placeholder="Untitled Entry" maxlength="100">
+                </div>
+                <div class="editor-actions">
+                    <button id="saveBtn" class="save-btn">
+                        <span class="btn-icon">💾</span>
+                        Save
+                    </button>
+                    <button id="previewBtn" class="preview-btn">
+                        <span class="btn-icon">👁️</span>
+                        Preview
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <div class="editor-toolbar">
+            <div class="toolbar-group">
+                <button class="toolbar-btn" data-command="bold" title="Bold">
+                    <strong>B</strong>
+                </button>
+                <button class="toolbar-btn" data-command="italic" title="Italic">
+                    <em>I</em>
+                </button>
+                <button class="toolbar-btn" data-command="underline" title="Underline">
+                    <u>U</u>
+                </button>
+                <button class="toolbar-btn" data-command="strikeThrough" title="Strikethrough">
+                    <s>S</s>
+                </button>
+            </div>
+            
+            <div class="toolbar-separator"></div>
+            
+            <div class="toolbar-group">
+                <button class="toolbar-btn" data-command="insertUnorderedList" title="Bullet List">
+                    <span>•</span>
+                </button>
+                <button class="toolbar-btn" data-command="insertOrderedList" title="Numbered List">
+                    <span>1.</span>
+                </button>
+                <button class="toolbar-btn" data-command="indent" title="Indent">
+                    <span>→</span>
+                </button>
+                <button class="toolbar-btn" data-command="outdent" title="Outdent">
+                    <span>←</span>
+                </button>
+            </div>
+            
+            <div class="toolbar-separator"></div>
+            
+            <div class="toolbar-group">
+                <select id="fontSize" class="font-size-select">
+                    <option value="12px">12px</option>
+                    <option value="14px" selected>14px</option>
+                    <option value="16px">16px</option>
+                    <option value="18px">18px</option>
+                    <option value="20px">20px</option>
+                    <option value="24px">24px</option>
+                </select>
+                <select id="fontFamily" class="font-family-select">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="Georgia, serif" selected>Georgia</option>
+                    <option value="Times New Roman, serif">Times New Roman</option>
+                    <option value="Courier New, monospace">Courier New</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Helvetica, sans-serif">Helvetica</option>
+                </select>
+            </div>
+            
+            <div class="toolbar-separator"></div>
+            
+            <div class="toolbar-group">
+                <input type="color" id="textColor" class="color-picker" value="#000000" title="Text Color">
+                <input type="color" id="backgroundColor" class="color-picker" value="#ffffff" title="Background Color">
+                <button class="toolbar-btn" data-command="removeFormat" title="Clear Formatting">
+                    <span>Clear</span>
+                </button>
+            </div>
+            
+            <div class="toolbar-separator"></div>
+            
+            <div class="toolbar-group">
+                <button id="insertImageBtn" class="toolbar-btn" title="Insert Image">
+                    <span>🖼️</span>
+                </button>
+                <input type="file" id="imageInput" accept="image/*" style="display: none;">
+            </div>
+        </div>
+        
+        <div class="editor-content">
+            <div class="editor-wrapper">
+                <div id="editor" class="rich-editor" contenteditable="true" data-placeholder="Start writing your journal entry...">
+                    <!-- Rich text editor content will be here -->
+                </div>
+            </div>
+            
+            <div class="editor-sidebar">
+                <div class="sidebar-section">
+                    <h3>Entry Info</h3>
+                    <div class="info-item">
+                        <label>Date:</label>
+                        <input type="date" id="entryDate" class="date-input">
+                    </div>
+                    <div class="info-item">
+                        <label>Word Count:</label>
+                        <span id="wordCount">0</span>
+                    </div>
+                    <div class="info-item">
+                        <label>Character Count:</label>
+                        <span id="charCount">0</span>
+                    </div>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Quick Actions</h3>
+                    <button class="sidebar-btn" id="addMoodBtn">
+                        <span class="btn-icon">😊</span>
+                        Add Mood
+                    </button>
+                    <button class="sidebar-btn" id="addWeatherBtn">
+                        <span class="btn-icon">🌤️</span>
+                        Add Weather
+                    </button>
+                    <button class="sidebar-btn" id="addLocationBtn">
+                        <span class="btn-icon">📍</span>
+                        Add Location
+                    </button>
+                </div>
+                
+                <div class="sidebar-section">
+                    <h3>Background Themes</h3>
+                    <div class="theme-grid">
+                        <button class="theme-btn" data-theme="default" title="Default">
+                            <div class="theme-preview default"></div>
+                        </button>
+                        <button class="theme-btn" data-theme="paper" title="Paper">
+                            <div class="theme-preview paper"></div>
+                        </button>
+                        <button class="theme-btn" data-theme="night" title="Night">
+                            <div class="theme-preview night"></div>
+                        </button>
+                        <button class="theme-btn" data-theme="sunset" title="Sunset">
+                            <div class="theme-preview sunset"></div>
+                        </button>
+                        <button class="theme-btn" data-theme="ocean" title="Ocean">
+                            <div class="theme-preview ocean"></div>
+                        </button>
+                        <button class="theme-btn" data-theme="forest" title="Forest">
+                            <div class="theme-preview forest"></div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="editor-footer">
+            <div class="footer-info">
+                <span id="lastSaved">Not saved</span>
+                <span class="separator">•</span>
+                <span id="autoSaveStatus">Auto-save enabled</span>
+            </div>
+            <div class="footer-actions">
+                <button id="draftBtn" class="draft-btn">Save as Draft</button>
+                <button id="publishBtn" class="publish-btn">Publish Entry</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Mood Selection Modal -->
+    <div id="moodModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add Mood to Entry</h3>
+            <div class="mood-grid">
+                <button class="mood-btn" data-mood="😊">😊 Happy</button>
+                <button class="mood-btn" data-mood="😢">😢 Sad</button>
+                <button class="mood-btn" data-mood="😴">😴 Tired</button>
+                <button class="mood-btn" data-mood="😤">😤 Angry</button>
+                <button class="mood-btn" data-mood="😰">😰 Anxious</button>
+                <button class="mood-btn" data-mood="😌">😌 Calm</button>
+                <button class="mood-btn" data-mood="🤔">🤔 Thoughtful</button>
+                <button class="mood-btn" data-mood="😍">😍 Excited</button>
+                <button class="mood-btn" data-mood="😔">😔 Disappointed</button>
+                <button class="mood-btn" data-mood="😎">😎 Confident</button>
+                <button class="mood-btn" data-mood="🤗">🤗 Grateful</button>
+                <button class="mood-btn" data-mood="😕">😕 Confused</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Weather Selection Modal -->
+    <div id="weatherModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add Weather to Entry</h3>
+            <div class="weather-grid">
+                <button class="weather-btn" data-weather="☀️">☀️ Sunny</button>
+                <button class="weather-btn" data-weather="⛅">⛅ Partly Cloudy</button>
+                <button class="weather-btn" data-weather="☁️">☁️ Cloudy</button>
+                <button class="weather-btn" data-weather="🌧️">🌧️ Rainy</button>
+                <button class="weather-btn" data-weather="⛈️">⛈️ Stormy</button>
+                <button class="weather-btn" data-weather="❄️">❄️ Snowy</button>
+                <button class="weather-btn" data-weather="🌤️">🌤️ Clear</button>
+                <button class="weather-btn" data-weather="🌫️">🌫️ Foggy</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Location Modal -->
+    <div id="locationModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Add Location to Entry</h3>
+            <div class="location-form">
+                <input type="text" id="locationInput" placeholder="Enter location..." maxlength="50">
+                <button id="addLocationConfirm" class="confirm-btn">Add Location</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="journaleditor.js"></script>
+</body>
+</html>
