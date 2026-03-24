@@ -35,11 +35,11 @@ InnerCanvas is an all-in-one web application designed to help you manage your pe
 
 ```
 InnerCanvas/
-├── home.html                 # Main landing page & navigation hub
+├── index.html                # Main landing page & navigation hub
 ├── homescript.js             # Home page functionality
 ├── homestyles.css            # Home page styling
 │
-├── taskmanger.html           # Task Manager application
+├── taskmanager.html          # Task Manager application
 ├── taskmanagerscript.js      # Task Manager logic
 ├── taskmanagerstyles.css     # Task Manager styling
 │
@@ -72,7 +72,7 @@ InnerCanvas/
    ```
 
 2. **Open the application**
-   - Simply open `home.html` in your web browser
+   - Simply open `index.html` in your web browser
    - Or serve it locally using a simple HTTP server:
      ```bash
      # Using Python 3
