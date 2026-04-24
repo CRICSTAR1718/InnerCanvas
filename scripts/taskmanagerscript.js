@@ -1,310 +1,376 @@
 // Task Manager JavaScript
-const taskState = {
-    tasks: [],
-    currentFilter: 'all',
-    editingTaskId: null,
-    draggedTaskId: null,
-    elements: {}
-};
 
-function initializeTaskElements() {
-    taskState.elements = {
-        taskInput: document.getElementById('taskInput'),
-        addBtn: document.getElementById('addBtn'),
-        taskList: document.getElementById('taskList'),
-        emptyState: document.getElementById('emptyState'),
-        totalTasks: document.getElementById('totalTasks'),
-        completedTasks: document.getElementById('completedTasks'),
-        pendingTasks: document.getElementById('pendingTasks'),
-        filterBtns: document.querySelectorAll('.filter-btn'),
-        clearCompletedBtn: document.getElementById('clearCompleted'),
-        clearAllBtn: document.getElementById('clearAll')
-    };
+let tasks = [];
+let currentFilter = 'all';
+let editingTaskId = null;
+
+let taskInput;
+let addBtn;
+let taskList;
+let emptyState;
+let totalTasks;
+let completedTasks;
+let pendingTasks;
+let filterButtons;
+let clearCompletedBtn;
+let clearAllBtn;
+
+function setupElements() {
+    taskInput = document.getElementById('taskInput');
+    addBtn = document.getElementById('addBtn');
+    taskList = document.getElementById('taskList');
+    emptyState = document.getElementById('emptyState');
+    totalTasks = document.getElementById('totalTasks');
+    completedTasks = document.getElementById('completedTasks');
+    pendingTasks = document.getElementById('pendingTasks');
+    filterButtons = document.querySelectorAll('.filter-btn');
+    clearCompletedBtn = document.getElementById('clearCompleted');
+    clearAllBtn = document.getElementById('clearAll');
 }
 
-function bindTaskEvents() {
-    taskState.elements.addBtn.addEventListener('click', addTask);
-    taskState.elements.taskInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
+function setupEvents() {
+    addBtn.addEventListener('click', addTask);
+
+    taskInput.addEventListener('keypress', function (event) {
+        if (event.key === 'Enter') {
             addTask();
         }
     });
 
-    taskState.elements.filterBtns.forEach((btn) => {
-        btn.addEventListener('click', (e) => setFilter(e.target.dataset.filter));
+    taskInput.addEventListener('input', validateInput);
+
+    filterButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+            changeFilter(button.dataset.filter);
+        });
     });
 
-    taskState.elements.clearCompletedBtn.addEventListener('click', clearCompleted);
-    taskState.elements.clearAllBtn.addEventListener('click', clearAllTasks);
-    taskState.elements.taskInput.addEventListener('input', validateTaskInput);
+    clearCompletedBtn.addEventListener('click', clearCompletedTasks);
+    clearAllBtn.addEventListener('click', clearAllTasks);
 
-    document.addEventListener('keydown', handleTaskKeyboardShortcuts);
-    bindTaskDragAndDrop();
+    document.addEventListener('keydown', function (event) {
+        if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+            event.preventDefault();
+            addTask();
+        }
+
+        if (event.key === 'Escape' && editingTaskId) {
+            cancelEditing();
+        }
+    });
 }
 
-function generateTaskId() {
-    return Date.now().toString(36) + Math.random().toString(36).substr(2);
+function createId() {
+    return Date.now().toString();
 }
 
 function addTask() {
-    const text = taskState.elements.taskInput.value.trim();
+    const text = taskInput.value.trim();
 
-    if (!text) {
-        showTaskMessage('Please enter a task!', 'error');
+    if (text === '') {
+        showMessage('Please enter a task!', 'error');
         return;
     }
 
-    if (taskState.editingTaskId) {
-        updateTask(taskState.editingTaskId, text);
-        taskState.editingTaskId = null;
-        taskState.elements.addBtn.textContent = 'Add Task';
+    if (editingTaskId) {
+        updateTask(editingTaskId, text);
     } else {
-        taskState.tasks.unshift({
-            id: generateTaskId(),
-            text,
+        const newTask = {
+            id: createId(),
+            text: text,
             completed: false,
             createdAt: new Date().toISOString()
-        });
-        showTaskMessage('Task added successfully!', 'success');
+        };
+
+        tasks.unshift(newTask);
+        showMessage('Task added successfully!', 'success');
     }
 
-    taskState.elements.taskInput.value = '';
+    taskInput.value = '';
     saveTasks();
     renderTasks();
-    updateTaskStats();
-    validateTaskInput();
+    updateStats();
+    resetAddButton();
+    validateInput();
 }
 
 function updateTask(taskId, newText) {
-    const task = taskState.tasks.find((item) => item.id === taskId);
-    if (task) {
-        task.text = newText;
-        showTaskMessage('Task updated successfully!', 'success');
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === taskId) {
+            tasks[i].text = newText;
+            break;
+        }
     }
+
+    editingTaskId = null;
+    showMessage('Task updated successfully!', 'success');
 }
 
 function toggleTask(taskId) {
-    const task = taskState.tasks.find((item) => item.id === taskId);
-    if (!task) return;
+    for (let i = 0; i < tasks.length; i++) {
+        if (tasks[i].id === taskId) {
+            tasks[i].completed = !tasks[i].completed;
+            break;
+        }
+    }
 
-    task.completed = !task.completed;
     saveTasks();
     renderTasks();
-    updateTaskStats();
-    showTaskMessage(task.completed ? 'Task completed!' : 'Task marked as pending', 'success');
+    updateStats();
+    showMessage('Task updated!', 'success');
 }
 
 function deleteTask(taskId) {
-    if (!confirm('Are you sure you want to delete this task?')) {
+    const userConfirmed = confirm('Are you sure you want to delete this task?');
+
+    if (!userConfirmed) {
         return;
     }
 
-    const taskIndex = taskState.tasks.findIndex((item) => item.id === taskId);
-    if (taskIndex === -1) return;
+    tasks = tasks.filter(function (task) {
+        return task.id !== taskId;
+    });
 
-    const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
-    if (!taskElement) return;
-
-    taskElement.classList.add('removing');
-    setTimeout(() => {
-        taskState.tasks.splice(taskIndex, 1);
-        saveTasks();
-        renderTasks();
-        updateTaskStats();
-        showTaskMessage('Task deleted successfully!', 'success');
-    }, 300);
+    saveTasks();
+    renderTasks();
+    updateStats();
+    showMessage('Task deleted successfully!', 'success');
 }
 
 function editTask(taskId) {
-    const task = taskState.tasks.find((item) => item.id === taskId);
-    if (!task) return;
+    const task = tasks.find(function (item) {
+        return item.id === taskId;
+    });
 
-    taskState.editingTaskId = taskId;
-    taskState.elements.taskInput.value = task.text;
-    taskState.elements.taskInput.focus();
-    taskState.elements.addBtn.textContent = 'Update Task';
-    validateTaskInput();
+    if (!task) {
+        return;
+    }
+
+    editingTaskId = taskId;
+    taskInput.value = task.text;
+    taskInput.focus();
+    addBtn.textContent = 'Update Task';
+    validateInput();
 }
 
-function setFilter(filter) {
-    taskState.currentFilter = filter;
+function cancelEditing() {
+    editingTaskId = null;
+    taskInput.value = '';
+    resetAddButton();
+    taskInput.blur();
+    validateInput();
+}
 
-    taskState.elements.filterBtns.forEach((btn) => {
-        btn.classList.toggle('active', btn.dataset.filter === filter);
+function resetAddButton() {
+    addBtn.textContent = 'Add Task';
+}
+
+function changeFilter(filter) {
+    currentFilter = filter;
+
+    filterButtons.forEach(function (button) {
+        button.classList.remove('active');
+
+        if (button.dataset.filter === filter) {
+            button.classList.add('active');
+        }
     });
 
     renderTasks();
 }
 
-function getFilteredTasks() {
-    if (taskState.currentFilter === 'completed') {
-        return taskState.tasks.filter((task) => task.completed);
+function getTasksToShow() {
+    if (currentFilter === 'completed') {
+        return tasks.filter(function (task) {
+            return task.completed;
+        });
     }
-    if (taskState.currentFilter === 'pending') {
-        return taskState.tasks.filter((task) => !task.completed);
+
+    if (currentFilter === 'pending') {
+        return tasks.filter(function (task) {
+            return !task.completed;
+        });
     }
-    return taskState.tasks;
+
+    return tasks;
 }
 
 function renderTasks() {
-    const filteredTasks = getFilteredTasks();
+    const visibleTasks = getTasksToShow();
 
-    if (filteredTasks.length === 0) {
-        taskState.elements.taskList.style.display = 'none';
-        taskState.elements.emptyState.style.display = 'block';
-
-        const emptyIcon = taskState.elements.emptyState.querySelector('.empty-icon');
-        const emptyTitle = taskState.elements.emptyState.querySelector('h3');
-        const emptyText = taskState.elements.emptyState.querySelector('p');
-
-        if (taskState.currentFilter === 'completed') {
-            emptyIcon.textContent = 'âœ…';
-            emptyTitle.textContent = 'No completed tasks';
-            emptyText.textContent = 'Complete some tasks to see them here!';
-        } else if (taskState.currentFilter === 'pending') {
-            emptyIcon.textContent = 'â³';
-            emptyTitle.textContent = 'No pending tasks';
-            emptyText.textContent = 'Great job! All tasks are completed!';
-        } else {
-            emptyIcon.textContent = 'ðŸ“‹';
-            emptyTitle.textContent = 'No tasks yet';
-            emptyText.textContent = 'Add your first task to get started!';
-        }
-
+    if (visibleTasks.length === 0) {
+        showEmptyState();
         return;
     }
 
-    taskState.elements.taskList.style.display = 'block';
-    taskState.elements.emptyState.style.display = 'none';
+    taskList.style.display = 'block';
+    emptyState.style.display = 'none';
 
-    taskState.elements.taskList.innerHTML = filteredTasks.map((task) => `
-        <li class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}" draggable="true">
-            <input type="checkbox" class="task-checkbox" ${task.completed ? 'checked' : ''}
-                   onchange="taskManager.toggleTask('${task.id}')">
-            <span class="task-text">${escapeTaskHtml(task.text)}</span>
-            <div class="task-actions">
-                <button class="task-btn edit-btn" onclick="taskManager.editTask('${task.id}')">
-                    âœï¸ Edit
-                </button>
-                <button class="task-btn delete-btn" onclick="taskManager.deleteTask('${task.id}')">
-                    ðŸ—‘ï¸ Delete
-                </button>
-            </div>
-        </li>
-    `).join('');
+    let html = '';
+
+    visibleTasks.forEach(function (task) {
+        html += `
+            <li class="task-item ${task.completed ? 'completed' : ''}" data-task-id="${task.id}">
+                <input
+                    type="checkbox"
+                    class="task-checkbox"
+                    ${task.completed ? 'checked' : ''}
+                    onchange="taskManager.toggleTask('${task.id}')"
+                >
+                <span class="task-text">${escapeHtml(task.text)}</span>
+                <div class="task-actions">
+                    <button class="task-btn edit-btn" onclick="taskManager.editTask('${task.id}')">
+                        Edit
+                    </button>
+                    <button class="task-btn delete-btn" onclick="taskManager.deleteTask('${task.id}')">
+                        Delete
+                    </button>
+                </div>
+            </li>
+        `;
+    });
+
+    taskList.innerHTML = html;
 }
 
-function updateTaskStats() {
-    const total = taskState.tasks.length;
-    const completed = taskState.tasks.filter((task) => task.completed).length;
+function showEmptyState() {
+    const emptyIcon = emptyState.querySelector('.empty-icon');
+    const emptyTitle = emptyState.querySelector('h3');
+    const emptyText = emptyState.querySelector('p');
+
+    taskList.style.display = 'none';
+    emptyState.style.display = 'block';
+
+    if (currentFilter === 'completed') {
+        emptyIcon.textContent = '✅';
+        emptyTitle.textContent = 'No completed tasks';
+        emptyText.textContent = 'Complete some tasks to see them here!';
+        return;
+    }
+
+    if (currentFilter === 'pending') {
+        emptyIcon.textContent = '⏳';
+        emptyTitle.textContent = 'No pending tasks';
+        emptyText.textContent = 'Great job! All tasks are completed!';
+        return;
+    }
+
+    emptyIcon.textContent = '📋';
+    emptyTitle.textContent = 'No tasks yet';
+    emptyText.textContent = 'Add your first task to get started!';
+}
+
+function updateStats() {
+    const total = tasks.length;
+    const completed = tasks.filter(function (task) {
+        return task.completed;
+    }).length;
     const pending = total - completed;
 
-    taskState.elements.totalTasks.textContent = total;
-    taskState.elements.completedTasks.textContent = completed;
-    taskState.elements.pendingTasks.textContent = pending;
-
-    updateProgressBar(completed, total);
+    totalTasks.textContent = total;
+    completedTasks.textContent = completed;
+    pendingTasks.textContent = pending;
 }
 
-function updateProgressBar(completed, total) {
-    const progress = total > 0 ? (completed / total) * 100 : 0;
-    const completedStat = taskState.elements.completedTasks.parentElement;
+function clearCompletedTasks() {
+    const completedCount = tasks.filter(function (task) {
+        return task.completed;
+    }).length;
 
-    if (progress === 100 && total > 0) {
-        completedStat.style.background = 'linear-gradient(135deg, #28a745 0%, #20c997 100%)';
-    } else if (progress > 50) {
-        completedStat.style.background = 'linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)';
-    } else {
-        completedStat.style.background = 'white';
-    }
-}
-
-function clearCompleted() {
-    const completedTasks = taskState.tasks.filter((task) => task.completed);
-
-    if (completedTasks.length === 0) {
-        showTaskMessage('No completed tasks to clear!', 'info');
+    if (completedCount === 0) {
+        showMessage('No completed tasks to clear!', 'info');
         return;
     }
 
-    if (confirm(`Are you sure you want to delete ${completedTasks.length} completed task(s)?`)) {
-        taskState.tasks = taskState.tasks.filter((task) => !task.completed);
-        saveTasks();
-        renderTasks();
-        updateTaskStats();
-        showTaskMessage('Completed tasks cleared!', 'success');
+    const userConfirmed = confirm(`Are you sure you want to delete ${completedCount} completed task(s)?`);
+
+    if (!userConfirmed) {
+        return;
     }
+
+    tasks = tasks.filter(function (task) {
+        return !task.completed;
+    });
+
+    saveTasks();
+    renderTasks();
+    updateStats();
+    showMessage('Completed tasks cleared!', 'success');
 }
 
 function clearAllTasks() {
-    if (taskState.tasks.length === 0) {
-        showTaskMessage('No tasks to clear!', 'info');
+    if (tasks.length === 0) {
+        showMessage('No tasks to clear!', 'info');
         return;
     }
 
-    if (confirm(`Are you sure you want to delete all ${taskState.tasks.length} task(s)?`)) {
-        taskState.tasks = [];
-        saveTasks();
-        renderTasks();
-        updateTaskStats();
-        showTaskMessage('All tasks cleared!', 'success');
+    const userConfirmed = confirm(`Are you sure you want to delete all ${tasks.length} task(s)?`);
+
+    if (!userConfirmed) {
+        return;
     }
+
+    tasks = [];
+    saveTasks();
+    renderTasks();
+    updateStats();
+    showMessage('All tasks cleared!', 'success');
 }
 
-function validateTaskInput() {
-    const text = taskState.elements.taskInput.value.trim();
+function validateInput() {
+    const text = taskInput.value.trim();
     const isValid = text.length > 0 && text.length <= 100;
+    const characterCount = taskInput.value.length;
 
-    taskState.elements.addBtn.disabled = !isValid;
-    taskState.elements.addBtn.style.opacity = isValid ? '1' : '0.6';
+    addBtn.disabled = !isValid;
+    addBtn.style.opacity = isValid ? '1' : '0.6';
 
-    const charCount = taskState.elements.taskInput.value.length;
-    if (charCount > 90) {
-        taskState.elements.taskInput.style.borderColor = '#dc3545';
-    } else if (charCount > 80) {
-        taskState.elements.taskInput.style.borderColor = '#ffc107';
+    if (characterCount > 90) {
+        taskInput.style.borderColor = '#dc3545';
+    } else if (characterCount > 80) {
+        taskInput.style.borderColor = '#ffc107';
     } else {
-        taskState.elements.taskInput.style.borderColor = '#e1e5e9';
+        taskInput.style.borderColor = '#e1e5e9';
     }
 }
 
-function showTaskMessage(message, type = 'info') {
+function showMessage(message, type) {
     const toast = document.createElement('div');
-    toast.className = `toast toast-${type}`;
     toast.textContent = message;
 
-    Object.assign(toast.style, {
-        position: 'fixed',
-        top: '20px',
-        right: '20px',
-        padding: '15px 20px',
-        borderRadius: '10px',
-        color: 'white',
-        fontWeight: '500',
-        zIndex: '1000',
-        transform: 'translateX(100%)',
-        transition: 'transform 0.3s ease',
-        maxWidth: '300px',
-        wordWrap: 'break-word'
-    });
+    toast.style.position = 'fixed';
+    toast.style.top = '20px';
+    toast.style.right = '20px';
+    toast.style.padding = '15px 20px';
+    toast.style.borderRadius = '10px';
+    toast.style.color = 'white';
+    toast.style.fontWeight = '500';
+    toast.style.zIndex = '1000';
+    toast.style.transform = 'translateX(100%)';
+    toast.style.transition = 'transform 0.3s ease';
+    toast.style.maxWidth = '300px';
+    toast.style.wordWrap = 'break-word';
 
-    const colors = {
-        success: '#28a745',
-        error: '#dc3545',
-        info: '#17a2b8',
-        warning: '#ffc107'
-    };
-    toast.style.background = colors[type] || colors.info;
+    if (type === 'success') {
+        toast.style.background = '#28a745';
+    } else if (type === 'error') {
+        toast.style.background = '#dc3545';
+    } else if (type === 'warning') {
+        toast.style.background = '#ffc107';
+    } else {
+        toast.style.background = '#17a2b8';
+    }
 
     document.body.appendChild(toast);
 
-    setTimeout(() => {
+    setTimeout(function () {
         toast.style.transform = 'translateX(0)';
     }, 100);
 
-    setTimeout(() => {
+    setTimeout(function () {
         toast.style.transform = 'translateX(100%)';
-        setTimeout(() => {
+
+        setTimeout(function () {
             if (toast.parentNode) {
                 toast.parentNode.removeChild(toast);
             }
@@ -312,7 +378,7 @@ function showTaskMessage(message, type = 'info') {
     }, 3000);
 }
 
-function escapeTaskHtml(text) {
+function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
@@ -320,10 +386,10 @@ function escapeTaskHtml(text) {
 
 function saveTasks() {
     try {
-        localStorage.setItem('taskManagerTasks', JSON.stringify(taskState.tasks));
+        localStorage.setItem('taskManagerTasks', JSON.stringify(tasks));
     } catch (error) {
         console.error('Error saving tasks:', error);
-        showTaskMessage('Error saving tasks to local storage', 'error');
+        showMessage('Error saving tasks to local storage', 'error');
     }
 }
 
@@ -333,98 +399,55 @@ function loadTasks() {
         return savedTasks ? JSON.parse(savedTasks) : [];
     } catch (error) {
         console.error('Error loading tasks:', error);
-        showTaskMessage('Error loading tasks from local storage', 'error');
+        showMessage('Error loading tasks from local storage', 'error');
         return [];
     }
 }
 
-function handleTaskKeyboardShortcuts(e) {
-    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
-        e.preventDefault();
-        addTask();
+function addSampleTasksIfNeeded() {
+    if (tasks.length > 0) {
+        return;
     }
 
-    if (e.key === 'Escape' && taskState.editingTaskId) {
-        taskState.editingTaskId = null;
-        taskState.elements.taskInput.value = '';
-        taskState.elements.addBtn.textContent = 'Add Task';
-        taskState.elements.taskInput.blur();
-        validateTaskInput();
-    }
-}
-
-function bindTaskDragAndDrop() {
-    document.addEventListener('dragstart', (e) => {
-        if (e.target.classList.contains('task-item')) {
-            taskState.draggedTaskId = e.target.dataset.taskId;
-            e.target.style.opacity = '0.5';
+    tasks = [
+        {
+            id: createId() + '-1',
+            text: 'Welcome to your Task Manager!',
+            completed: false,
+            createdAt: new Date().toISOString()
+        },
+        {
+            id: createId() + '-2',
+            text: 'Click the checkbox to mark tasks as complete',
+            completed: true,
+            createdAt: new Date().toISOString()
+        },
+        {
+            id: createId() + '-3',
+            text: 'Use the edit button to modify tasks',
+            completed: false,
+            createdAt: new Date().toISOString()
         }
-    });
-
-    document.addEventListener('dragend', (e) => {
-        if (e.target.classList.contains('task-item')) {
-            e.target.style.opacity = '1';
-            taskState.draggedTaskId = null;
-        }
-    });
-
-    document.addEventListener('dragover', (e) => {
-        e.preventDefault();
-    });
-
-    document.addEventListener('drop', (e) => {
-        e.preventDefault();
-        if (!taskState.draggedTaskId || !e.target.classList.contains('task-item')) {
-            return;
-        }
-
-        const targetTaskId = e.target.dataset.taskId;
-        if (taskState.draggedTaskId === targetTaskId) {
-            return;
-        }
-
-        const draggedIndex = taskState.tasks.findIndex((task) => task.id === taskState.draggedTaskId);
-        const targetIndex = taskState.tasks.findIndex((task) => task.id === targetTaskId);
-
-        if (draggedIndex !== -1 && targetIndex !== -1) {
-            const draggedTaskObj = taskState.tasks.splice(draggedIndex, 1)[0];
-            taskState.tasks.splice(targetIndex, 0, draggedTaskObj);
-            saveTasks();
-            renderTasks();
-        }
-    });
-}
-
-function createSampleTasks() {
-    return [
-        { id: generateTaskId(), text: 'Welcome to your Task Manager!', completed: false, createdAt: new Date().toISOString() },
-        { id: generateTaskId(), text: 'Click the checkbox to mark tasks as complete', completed: true, createdAt: new Date().toISOString() },
-        { id: generateTaskId(), text: 'Use the edit button to modify tasks', completed: false, createdAt: new Date().toISOString() }
     ];
+
+    saveTasks();
 }
 
-function initTaskManager() {
-    taskState.tasks = loadTasks();
-    initializeTaskElements();
-    bindTaskEvents();
+function startTaskManager() {
+    tasks = loadTasks();
+    setupElements();
+    setupEvents();
+    addSampleTasksIfNeeded();
     renderTasks();
-    updateTaskStats();
-    validateTaskInput();
-
-    if (taskState.tasks.length === 0) {
-        taskState.tasks = createSampleTasks();
-        saveTasks();
-        renderTasks();
-        updateTaskStats();
-    }
+    updateStats();
+    validateInput();
 }
 
 const taskManager = {
-    addTask,
-    toggleTask,
-    deleteTask,
-    editTask
+    toggleTask: toggleTask,
+    editTask: editTask,
+    deleteTask: deleteTask
 };
 
 window.taskManager = taskManager;
-document.addEventListener('DOMContentLoaded', initTaskManager);
+document.addEventListener('DOMContentLoaded', startTaskManager);
