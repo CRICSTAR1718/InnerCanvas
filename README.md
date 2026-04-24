@@ -1,184 +1,97 @@
-# 🎨 InnerCanvas - Personal Productivity & Wellness Hub
+# InnerCanvas - Personal Productivity & Wellness Hub
 
-> Your Personal Productivity & Wellness Hub — Organize your life, track your mood, and capture your thoughts in one beautiful place.
+> Organize your life, track your mood, and capture your thoughts in one place.
 
-## ✨ Features
+## Features
 
-InnerCanvas is an all-in-one web application designed to help you manage your personal life, wellness, and productivity. It includes:
-
-### 📝 **Task Manager**
-- Create and manage your daily to-do list
-- Mark tasks as complete
-- Filter and search through your tasks
-- Persistent local storage (your data stays on your device)
-
-### 😊 **Mood Tracker**
-- Track your daily emotions with emoji-based moods
-- Record mood notes and timestamps
-- View mood history in an organized list
-- Calendar view to see patterns over time
-- View statistics on your emotional trends
-
-### 📖 **Life Journal**
-- Write and save journal entries
-- Capture your thoughts, memories, and experiences
-- Search through past entries
-- Edit and manage your journal entries
-- Organize your personal reflections
-
-### 🏠 **Home Dashboard**
-- Central hub to access all features
-- Beautiful card-based UI for easy navigation
-- Quick overview of available apps
-
-## 📁 Project Structure
-
-```
-InnerCanvas/
-├── index.html                # Main landing page & navigation hub
-├── homescript.js             # Home page functionality
-├── homestyles.css            # Home page styling
-│
-├── taskmanager.html          # Task Manager application
-├── taskmanagerscript.js      # Task Manager logic
-├── taskmanagerstyles.css     # Task Manager styling
-│
-├── moodtracker.html          # Mood Tracker application
-├── moodtrackerscript.js      # Mood Tracker logic
-├── moodtrackerstyles.css     # Mood Tracker styling
-│
-├── journal.html              # Journal listing & management
-├── journalscript.js          # Journal logic
-├── journalstyles.css         # Journal styling
-│
-├── journaleditor.html        # Journal entry editor
-├── journaleditor.js          # Journal editor logic
-│
-└── README.md                 # This file
-```
-
-## 🚀 Getting Started
-
-### Prerequisites
-- A modern web browser (Chrome, Firefox, Safari, Edge)
-- No server or installation required!
-
-### Installation
-
-1. **Clone or download the project**
-   ```bash
-   git clone <repository-url>
-   cd InnerCanvas
-   ```
-
-2. **Open the application**
-   - Simply open `index.html` in your web browser
-   - Or serve it locally using a simple HTTP server:
-     ```bash
-     # Using Python 3
-     python -m http.server 8000
-     
-     # Using Node.js with http-server
-     npx http-server
-     ```
-   - Then visit `http://localhost:8000` in your browser
-
-## 💾 Data Storage
-
-InnerCanvas uses **browser local storage** to save all your data:
-- Tasks are stored locally on your device
-- Mood entries are stored locally on your device
-- Journal entries are stored locally on your device
-- **Your data is private and never leaves your browser**
-- Clear your browser cache/history to reset data
-
-## 🎯 How to Use
+InnerCanvas is an all-in-one web app for personal productivity and wellness. It includes:
 
 ### Task Manager
-1. Click "Task Manager" from the home page
-2. Click "New Task" to add a task
-3. Enter your task description
-4. Mark tasks complete as you finish them
-5. Use filters to organize your tasks
+- Create and manage daily to-do items
+- Mark tasks as complete
+- Filter and search tasks
+- Save data locally in the browser
 
 ### Mood Tracker
-1. Click "Mood Tracker" from the home page
-2. Go to "Add Mood" tab
-3. Select your current mood from emoji options
-4. Add an optional note
-5. View your mood history and calendar patterns in other tabs
+- Track daily emotions with emoji-based moods
+- Add notes and dates to entries
+- Review mood history
+- Use a calendar view to spot patterns
+- See simple mood statistics
 
 ### Life Journal
-1. Click "Life Journal" from the home page
-2. Click "New Entry" to write a journal entry
-3. Write your thoughts and experiences
-4. Save your entry
-5. Search for past entries using the search feature
+- Write and save journal entries
+- Search past entries
+- Edit and manage saved entries
+- Organize personal reflections
 
-## 🛠️ Technology Stack
+### Home Dashboard
+- Navigate between all features
+- View a quick overview from the landing page
 
-- **HTML5** - Semantic markup
-- **CSS3** - Modern responsive styling
-- **Vanilla JavaScript** - No external dependencies
-- **Local Storage API** - Data persistence
-- **Responsive Design** - Works on desktop, tablet, and mobile
+## Project Structure
 
-## 🎨 Design Features
+```text
+InnerCanvas/
+|-- index.html                    # Main landing page
+|-- pages/
+|   |-- taskmanager.html          # Task Manager app
+|   |-- moodtracker.html          # Mood Tracker app
+|   |-- journal.html              # Journal list page
+|   `-- journaleditor.html        # Journal editor page
+|-- scripts/
+|   |-- homescript.js             # Home page logic
+|   |-- taskmanagerscript.js      # Task Manager logic
+|   |-- moodtrackerscript.js      # Mood Tracker logic
+|   |-- journalscript.js          # Journal page logic
+|   `-- journaleditor.js          # Journal editor logic
+|-- styles/
+|   |-- homestyles.css            # Home page styles
+|   |-- taskmanagerstyles.css     # Task Manager styles
+|   |-- moodtrackerstyles.css     # Mood Tracker styles
+|   `-- journalstyles.css         # Journal styles
+`-- README.md
+```
 
-- **Clean, intuitive interface** - Easy to navigate and use
-- **Responsive design** - Works on all devices
-- **Dark/Light theme ready** - Customizable appearance
-- **Emoji-based UI** - Visually engaging and fun
-- **Beautiful card layouts** - Modern, polished design
+## Getting Started
 
-## 🔒 Privacy
+### Prerequisites
+- A modern web browser
+- No installation required
 
-- All data is stored locally in your browser
-- No data is sent to any server
-- No tracking or analytics
-- 100% private and secure
+### Run the app
 
-## 📱 Browser Compatibility
+1. Clone or download the project.
+2. Open `index.html` directly in your browser.
 
-- Chrome/Edge (latest)
-- Firefox (latest)
-- Safari (latest)
-- Mobile browsers (iOS Safari, Chrome Mobile)
+You can also serve it locally:
 
-## 🚧 Future Enhancements
+```bash
+python -m http.server 8000
+```
 
-- [ ] Export data as PDF or CSV
-- [ ] Dark mode theme
-- [ ] Data backup and sync
-- [ ] Cloud storage integration
-- [ ] Mobile app version
-- [ ] Habit tracking
-- [ ] Goal setting feature
-- [ ] Notifications and reminders
-- [ ] Custom themes and colors
-- [ ] Advanced analytics and insights
+Then visit `http://localhost:8000`.
 
-## 📝 Notes
+## Data Storage
 
-- All data persists only in your local browser storage
-- To clear all data, clear your browser's local storage or cache
+InnerCanvas uses browser local storage:
+- Tasks stay on your device
+- Mood entries stay on your device
+- Journal entries stay on your device
+- No data is sent to a server
 
-## 💡 Tips for Best Experience
+## Technology Stack
 
-1. **Bookmark the home page** for easy access
-2. **Regularly backup** important journal entries by copying them
-3. **Use your mood tracker** consistently to identify patterns
-4. **Review your tasks** and journal entries periodically for reflection
-5. **Customize colors and fonts** in the CSS files to match your style
+- HTML5
+- CSS3
+- Vanilla JavaScript
+- Local Storage API
 
-## 📄 License
+## Notes
+
+- All data is stored only in the browser.
+- Clearing browser storage will remove saved app data.
+
+## License
 
 This project is open source and available for personal use.
-
-## 🤝 Contributing
-
-Feel free to fork this project and submit pull requests for any improvements!
-
----
-
-**Made with 💜 for personal productivity and wellness**

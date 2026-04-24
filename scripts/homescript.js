@@ -427,11 +427,11 @@ document.addEventListener('keydown', (e) => {
     // Only trigger if no modal is open
     if (!document.querySelector('.modal[style*="block"]')) {
         if (e.key === '1') {
-            navigateToApp('taskmanager.html');
+            navigateToApp('pages/taskmanager.html');
         } else if (e.key === '2') {
-            navigateToApp('moodtracker.html');
+            navigateToApp('pages/moodtracker.html');
         } else if (e.key === '3') {
-            navigateToApp('journal.html');
+            navigateToApp('pages/journal.html');
         } else if (e.key === 't') {
             homePage.showTips();
         } else if (e.key === 's') {

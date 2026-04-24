@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>InnerCanvas - Personal Productivity Hub</title>
-    <link rel="stylesheet" href="homestyles.css">
+    <link rel="stylesheet" href="styles/homestyles.css">
 </head>
 <body>
     <div class="container">
@@ -30,7 +30,7 @@
                     <span class="feature-tag">Filter & Search</span>
                     <span class="feature-tag">Local Storage</span>
                 </div>
-                <button class="app-btn" onclick="navigateToApp('taskmanager.html')">
+                <button class="app-btn" onclick="navigateToApp('pages/taskmanager.html')">
                     <span class="btn-text">Step Into Your Workflow</span>
                     <span class="btn-arrow">→</span>
                 </button>
@@ -46,7 +46,7 @@
                     <span class="feature-tag">Statistics</span>
                     <span class="feature-tag">History</span>
                 </div>
-                <button class="app-btn" onclick="navigateToApp('moodtracker.html')">
+                <button class="app-btn" onclick="navigateToApp('pages/moodtracker.html')">
                     <span class="btn-text">Track. Understand. Balance.</span>
                     <span class="btn-arrow">→</span>
                 </button>
@@ -62,7 +62,7 @@
                     <span class="feature-tag">Themes</span>
                     <span class="feature-tag">Auto-save</span>
                 </div>
-                <button class="app-btn" onclick="navigateToApp('journal.html')">
+                <button class="app-btn" onclick="navigateToApp('pages/journal.html')">
                     <span class="btn-text">Capture Your Thoughts</span>
                     <span class="btn-arrow">→</span>
                 </button>
@@ -106,15 +106,15 @@
         <div class="quick-actions">
             <h3 class="actions-title">Quick Actions</h3>
             <div class="actions-grid">
-                <button class="quick-action-btn" onclick="navigateToApp('taskmanager.html')">
+                <button class="quick-action-btn" onclick="navigateToApp('pages/taskmanager.html')">
                     <span class="action-icon">➕</span>
                     <span class="action-text">Add New Task</span>
                 </button>
-                <button class="quick-action-btn" onclick="navigateToApp('moodtracker.html')">
+                <button class="quick-action-btn" onclick="navigateToApp('pages/moodtracker.html')">
                     <span class="action-icon">😊</span>
                     <span class="action-text">Log Today's Mood</span>
                 </button>
-                <button class="quick-action-btn" onclick="navigateToApp('journal.html')">
+                <button class="quick-action-btn" onclick="navigateToApp('pages/journal.html')">
                     <span class="action-icon">✍️</span>
                     <span class="action-text">Write Journal Entry</span>
                 </button>
@@ -230,6 +230,6 @@
         </div>
     </div>
     
-    <script src="homescript.js"></script>
+    <script src="scripts/homescript.js"></script>
 </body>
 </html>
