@@ -336,6 +336,7 @@ function updateJournalStats() {
         return new Date(entry.date) >= oneWeekAgo;
     }).length;
 
+
     const totalWords = journalEntries.reduce(function (sum, entry) {
         return sum + (entry.wordCount || 0);
     }, 0);
